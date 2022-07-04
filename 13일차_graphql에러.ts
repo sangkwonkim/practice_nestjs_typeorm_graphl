@@ -12,3 +12,6 @@
 // Because __typename is always present, this is a valid query for any GraphQL server:
 
 // 해당 모듈의 type 파일에서 __typename과 Graphql 에서 정의한 리턴 타입을 맞춤으로써 해결할 수 있었습니다.
+
+
+    
