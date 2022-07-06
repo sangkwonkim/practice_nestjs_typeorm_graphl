@@ -257,31 +257,21 @@
 // 분명 parameter에는 4개의 where 검색이 나타나지만, 출력은 relations 배열에서 앞 쪽에 있는 관계 테이블에서만 나왔습니다.
 // relations 배열의 순서를 바꾸면 바뀐 순서에 맞게만 나왔는데, 조만간에 원인을 파악해서 공유해보도록 하겠습니다.
 
-// => 이 부분은 where: [] 내부에서 묶는 방법이 잘 못되어 검색이 정상적으로 작동하지 않았던 것으로 확인되었습니다.
-// 오늘 다시 코드를 수정하니 정상적으로 검색되는 것을 확인할 수 있었습니다.
-
-// ARTIST_NAME: [
-//     {
-//       existPeriodStyle : {
-//         liveClassMain : {
-//           artist : [
-//             { nameKo: Like(`%${input.keyword}%`) },
-//             { nameEn: Like(`%${input.keyword}%`) }
-//           ]
-//         }
-//       },
-//       notExistPeriodStyle : {
-//         liveClassMain : {
-//           artist : [
-//             { nameKo: Like(`%${input.keyword}%`) },
-//             { nameEn: Like(`%${input.keyword}%`) }
-//           ]
-//         }
-//       },
-//     }
-//   ],
-
-// 기존에는 existPeriodStyle.liveClassMain.artist.nameKo와 existPeriodStyle.liveClassMain.artist.nameEn을 별도로 Where의 배열 요소로 넣었는데,
-// 공통된 테이블은 묶고 제일 하단 검색 컬럼을 배열의 요소로 넣으니 (qb)와 동일하게 검색되는 것을 확인했습니다.
-// 이번 기회에 다양한 방법으로 Selct하는 것을 학습할 수 있었습니다.
-// 추후에 새로운 방법으로 쿼리를 짤 경우 공유해보도록 하겠습니다.
+// => 이 부분은 where: [] 내부에서 묶는 방법이 잘 못되어 검색이 정상적으로 작동하지 않았던 것으로 판단됩니다.
+// where : [
+//  조인 테이블 : {
+//      조인 테이블 : [
+//          컬럼명 : blah,
+//          컬럼명2 : blah
+//      ]
+//  },
+//  조인 테이블2 : {
+//      조인 테이블 : [
+//          컬럼명 : blah,
+//          컬럼명2 : blah
+//      ]
+//  },
+// ]
+// 오늘 아침에 이런식으로 묶을 수 있는 테이블은 묶고 where : [ ] 내부에 다른 배열을 넣었을 때 검색이 되는 지 확인해봤지만,
+// 원하는 정보를 찾기 어려웠습니다.
+// where ; []에 대해서 더 학습해보고 공유하도록 하겠습니다.
