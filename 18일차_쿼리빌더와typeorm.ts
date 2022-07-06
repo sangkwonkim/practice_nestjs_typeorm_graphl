@@ -90,7 +90,7 @@
 
 // typeorm에서는 leftJoinAndSelect과 leftJoin이 있습니다.
 // 공식문서에서 leftJoinAndSelect은 
-// he first argument is the relation you want to load and the second argument is an alias you assign to this relation's table. 
+// The first argument is the relation you want to load and the second argument is an alias you assign to this relation's table. 
 // You can use this alias anywhere in query builder. For example, let's take all Timber's photos which aren't removed.
 
 // const user = await createQueryBuilder("user")
@@ -104,6 +104,62 @@
 //     LEFT JOIN photos photo ON photo.user = user.id
 //     WHERE user.name = 'Timber' AND photo.isRemoved = FALSE
 
+// 클래스네임을 검색하는 쿼리빌더는 BlahbalhCounselingApplicant와 OneToMany로 Relation 되어 있는 existPeriodStyle에서 className을 검색하고 있습니다.
+// leftJoinAndSelect으로 existPeriodStyle과 BlahbalhCounselingForm(BlahbalhCounselingApplicant와 OneToOne 관계)을 할 경우
+// 아래와 같이 조건에 충족하는 BlahbalhCounselingApplicant 뿐만 아니라 existPeriodStyle과 BlahbalhCounselingForm 데이터 모두를 갖고 옵니다.
+// 
+//   [
+//     BlahbalhCounselingApplicant {
+//       __typename: 'BlahbalhCounselingApplicant',
+//       id: 8,
+//       createdAt: 2022-07-05T09:00:16.300Z,
+//       updatedAt: 2022-07-05T09:00:16.300Z,
+//       isViewAdmin: false,
+//       counselingFormStatus: 'NONE',
+//       BlahbalhCounselingFormId: 8,
+//       memo: null,
+//       existPeriodStyleId: 35,
+//       notExistPeriodStyleId: null,
+//       BlahbalhCounselingForm: BlahbalhCounselingForm {
+//         __typename: 'BlahbalhCounselingForm',
+//         id: 8,
+//         createdAt: 2022-07-05T09:00:16.283Z,
+//         updatedAt: 2022-07-05T09:00:16.283Z,
+//         studentId: 35,
+//         name: 'test',
+//         age: 1992,
+//         phoneNumber: 1012345678,
+//         job: 'test',
+//         detail: 'test',
+//         student: [Student],
+//         images: []
+//       },
+//       existPeriodStyle: BlahbalhExistPeriodStyle {
+//         __typename: 'BlahbalhExistPeriodStyle',
+//         id: 35,
+//         createdAt: 2022-07-04T07:18:37.385Z,
+//         updatedAt: 2022-07-04T07:18:37.385Z,
+//         status: 'ONGOING',
+//         cancelReason: 'Unbranded homogeneous Face to face Jordanian Dinar next-generation',
+//         expectedOpeningDate: 2023-04-02T00:22:47.000Z,
+//         className: 'Investment Account',
+//         classLimit: 23,
+//         classWaitedLimit: 12,
+//         period: 2,
+//         day: 'MON',
+//         classStartTime: '2022-06-01',
+//         classEndTime: '2022-07-01',
+//         BlahbalhMainId: 35,
+//         classStartDate: 2022-12-11T05:08:29.000Z,
+//         classEndDate: 2023-01-23T12:58:22.000Z,
+//         BlahbalhMain: [BlahbalhMain]
+//       },
+//       notExistPeriodStyle: null
+//     }
+//   ]
+
+
+
 // 반면 select가 없는 것은
 // const user = await createQueryBuilder("user")
 //     .innerJoin("user.photos", "photo")
@@ -116,6 +172,26 @@
 //     WHERE user.name = 'Timber'
 
 // 그리고 공식문서에서는 This will select Timber if he has photos, but won't return his photos.로 표현하고 있습니다.
+
+// 클래스 네임 검색 쿼리빌더에서 leftJoin으로 변경했을 때 나오는 결과는 다음과 같았습니다.
+
+// [
+//     BlahbalhCounselingApplicant {
+//       __typename: 'BlahbalhCounselingApplicant',
+//       id: 8,
+//       createdAt: 2022-07-05T09:00:16.300Z,
+//       updatedAt: 2022-07-05T09:00:16.300Z,
+//       isViewAdmin: false,
+//       counselingFormStatus: 'NONE',
+//       BlahbalhCounselingFormId: 8,
+//       memo: null,
+//       existPeriodStyleId: 35,
+//       notExistPeriodStyleId: null
+//     }
+//   ]
+
+// 검색하려는 ClassName을 existPeriodStyle 에서 찾고 해당 BlahbalhCounselingApplicant을 리턴하지만,
+// select 하지 않았기 때문에 join한 테이블의 정보는 갖고 오지 않았습니다.
 
 // 이 방법은 위의 코드를 구현하기 전에 구현했었던 클래스네임 검색 코드입니다.
 // qb.where은 잘 동작하지만,
@@ -167,7 +243,7 @@
 // AS `1d1e0d542680bd03cff02fae596bc6be976f21ef815b17fcd094386a7519779`, `blahClassWaitingApplicant__notblahPeriodStyle__blahClassMain`.`classIntroduce` 
 // ... 양이 많아서 중략했습니다.
 
-// 아티스트 네임은 클래스네임과 동일한 방법으로 구현되었는데, 여기에서는 별칭이 잘 확인되었지만, 어떤 이유에서 클래스 네임에서는 확인되지 않는 지 알아봐야겠습니다.
+// 아티스트 네임은 기존의 클래스네임과 동일한 방법으로 구현되었는데, 여기에서는 별칭이 잘 확인되었지만, 어떤 이유에서 클래스 네임에서는 확인되지 않는 지 알아봐야겠습니다.
 
 // ARTIST_NAME: 
 // (qb) => {
@@ -180,3 +256,32 @@
 // 마지막으로, where: []을 통해서 or로 where 을 사용할 때, relations 배열에 정의된 순서에 따라 검색이 되고, 일정 갯수가 넘어가면 반환이 되는 에러가 있었습니다.
 // 분명 parameter에는 4개의 where 검색이 나타나지만, 출력은 relations 배열에서 앞 쪽에 있는 관계 테이블에서만 나왔습니다.
 // relations 배열의 순서를 바꾸면 바뀐 순서에 맞게만 나왔는데, 조만간에 원인을 파악해서 공유해보도록 하겠습니다.
+
+// => 이 부분은 where: [] 내부에서 묶는 방법이 잘 못되어 검색이 정상적으로 작동하지 않았던 것으로 확인되었습니다.
+// 오늘 다시 코드를 수정하니 정상적으로 검색되는 것을 확인할 수 있었습니다.
+
+// ARTIST_NAME: [
+//     {
+//       existPeriodStyle : {
+//         liveClassMain : {
+//           artist : [
+//             { nameKo: Like(`%${input.keyword}%`) },
+//             { nameEn: Like(`%${input.keyword}%`) }
+//           ]
+//         }
+//       },
+//       notExistPeriodStyle : {
+//         liveClassMain : {
+//           artist : [
+//             { nameKo: Like(`%${input.keyword}%`) },
+//             { nameEn: Like(`%${input.keyword}%`) }
+//           ]
+//         }
+//       },
+//     }
+//   ],
+
+// 기존에는 existPeriodStyle.liveClassMain.artist.nameKo와 existPeriodStyle.liveClassMain.artist.nameEn을 별도로 Where의 배열 요소로 넣었는데,
+// 공통된 테이블은 묶고 제일 하단 검색 컬럼을 배열의 요소로 넣으니 (qb)와 동일하게 검색되는 것을 확인했습니다.
+// 이번 기회에 다양한 방법으로 Selct하는 것을 학습할 수 있었습니다.
+// 추후에 새로운 방법으로 쿼리를 짤 경우 공유해보도록 하겠습니다.
