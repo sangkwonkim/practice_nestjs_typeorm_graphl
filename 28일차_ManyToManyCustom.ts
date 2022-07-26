@@ -54,6 +54,19 @@
 
 // 이처럼 ManyToOne으로 위의 테이블들과 관계를 맺어주고 추가적으로 필요한 컬럼과 관계를 맺어주었습니다.
 
+// 기존에 있던 테이블에서는 각각 아래와 같이 StudentMyClassblahClassesblahClassMain와 OneToMany 관계를 맺어줬습니다.
+// 이렇게 테이블 명을 정한 이유는 기존의 브릿지 테이블을 사용하는 곳에서 에러가 발생할까봐 제가 정할 수 있지만, ManyToMany로 인해 자동으로 생긴 테이블명과 동일하게 했습니다
+
+// @OneToMany(
+//   () => StudentMyClassblahClassesblahClassMain,
+//   (myClassToblahClass) => myClassToblahClass.artClassMain, {
+//     cascade: false,
+//     createForeignKeyConstraints: false
+//   }
+// )
+// appliedStudents: StudentMyClassblahClassesblahClassMain[];
+
+
 // 이미 많은 부분에서 활용되고 있어서 처음에는 수정하는 것이 막막했지만, 입사 후 학습했던 부분을 기억해서 브릿지 테이블을 별로도 생성해줌으로써
 // 손 쉽게 수정할 수 있었습니다.
 
