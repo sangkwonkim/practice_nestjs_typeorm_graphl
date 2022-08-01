@@ -95,14 +95,3 @@
 
 
 // @JoinColumn을 설정한 곳에 외래키가 추가되기 때문에 해당 부분에 외래키 생성 false 옵션을 추가할 수 있음
-
-
-
-
-
-
-
-
-
-
-// [Update]: adding {onDelete:'CASCADE'} to the @ManyToOne decorators, as shown in the code above, does solves the problem.
