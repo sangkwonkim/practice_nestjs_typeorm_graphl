@@ -73,3 +73,11 @@
 
 // lazy relation은 eager relation에 비해 쿼리가 많이 발생한다는 단점이 있지만,
 // eager와 달리 연관된 데이터를 전부 가져오지 않기 때문에 초기 로딩 시간을 줄일 수 있어 효율적으로 이용할 수 있습니다.
+
+
+
+
+
+
+
+// Ignoring invalid timezone passed to Connection: UTC. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
