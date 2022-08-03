@@ -80,4 +80,114 @@
 
 
 
-// Ignoring invalid timezone passed to Connection: UTC. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+// 자기 참조 관계
+// 자기 참조 관계는 자신과 관계를 맺는 것입니다.
+// 트리 구조에서 엔티티를 저장할 때 유용합니다.(tree-like structures가 정확하게 무슨 뜻인지 파악하기 어려웠습니다.)
+// 또한 인접 리스트 패턴은 자기 참조 관계를 사용해서 구현됩니다.
+// 예를 들어 카테고리 트리를 만들려는 경우 
+// 범주는 범주를 중첩할 수 있고, 중첩 범주는 다른 범주를 중첩할 수 있습니다. 
+// 여기서는 자기 참조 관계가 편리합니다. 
+// 기본적으로 자기 참조 관계는 개체 자체를 대상으로 하는 규칙적인 관계일 뿐입니다.
+
+// 다음과 같이 자기 참조 관계를 구현할 수 있습니다.
+
+// import {
+//   Entity,
+//   PrimaryGeneratedColumn,
+//   Column,
+//   ManyToOne,
+//   OneToMany,
+// } from "typeorm"
+
+// @Entity()
+// export class Category {
+//   @PrimaryGeneratedColumn()
+//   id: number
+
+//   @Column()
+//   title: string
+
+//   @Column()
+//   text: string
+
+//   @ManyToOne((type) => Category, (category) => category.childCategories)
+//   parentCategory: Category
+
+//   @OneToMany((type) => Category, (category) => category.parentCategory)
+//   childCategories: Category[]
+// }
+
+
+
+// 조인 관계 없이 related object의 id를 사용하는 방법
+// relation에 의해서 생성되는 컬럼명과 동일하게 @Column으로 추가하면 됩니다.
+
+// import {
+//   Entity,
+//   PrimaryGeneratedColumn,
+//   Column,
+//   OneToOne,
+//   JoinColumn,
+// } from "typeorm"
+// import { Profile } from "./Profile"
+
+// @Entity()
+// export class User {
+//   @PrimaryGeneratedColumn()
+//   id: number
+
+//   @Column()
+//   name: string
+
+//   @Column({ nullable: true })
+//   profileId: number
+
+//   @OneToOne((type) => Profile)
+//   @JoinColumn()
+//   profile: Profile
+// }
+
+// User {
+//   id: 1,
+//   name: "Umed",
+//   profileId: 1
+// }
+
+// 그러면 이렇게 user에서 관계된 profile의 전체를 불러오지 않고도 id를 알 수 있습니다.
+
+
+
+// 관계 속성 초기화 에러
+
+// import {
+//   Entity,
+//   PrimaryGeneratedColumn,
+//   Column,
+//   ManyToMany,
+//   JoinTable,
+// } from "typeorm"
+// import { Category } from "./Category"
+
+// @Entity()
+// export class Question {
+//   @PrimaryGeneratedColumn()
+//   id: number
+
+//   @Column()
+//   title: string
+
+//   @Column()
+//   text: string
+
+//   @ManyToMany((type) => Category, (category) => category.questions)
+//   @JoinTable()
+//   categories: Category[] = [] // see = [] initialization here
+// }
+
+// 위와 같은 relation 프로퍼티의 초기화가 유용할 수도 있습니다.
+
+// 하지만 초기화를 한 상태에서 저장을 할 경우, 이전에 설정한 모든 카테고리가 제거됩니다.
+
+// 초기화를 할 경우, 해당 관계에서 그 안의 모든 항목이 삭제된 것으로 간주하기 때문입니다.
+
+// 그래서 엔티티와 생성자에서 초기화를 하지 않아야 합니다.

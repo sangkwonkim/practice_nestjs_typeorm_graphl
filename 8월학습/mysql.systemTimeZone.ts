@@ -17,3 +17,13 @@
 
 // 압출을 풀면 mysql에 쿼리문들이 자동으로 작성되며, 실행 시키면, SET GLOBAL time_zone='UTC' 쿼리가 동작함
 // 글로벌 타임과 세션타임을 변경 해줌으로써 local도 UTC로 변경할 수 있음.
+
+
+
+
+
+// Ignoring invalid timezone passed to Connection: UTC. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+
+// mysql 타임존 변경 후 서버를 실행시킬 때 다음과 같은 에러가 발생했습니다.
+
+// 구글링으로 알아보니 typeorm.cofig에서 타임존을 문자열로 넣을 경우, 인식이 안되서 발생하는 에러로, 이를 시간으로 변경하여 해결할 수 있다는 것을 알게되었습니다.
