@@ -10,6 +10,12 @@
 
 // migrations - 데이터 소스에 로드하고 사용할 migrations. 자세한 migrations은 추후에 학습할 예정
 
+// migrationsRun - 애플리케이션을 실행할 때마다 자동으로 마이그레이션을 할지 여부
+
+// migrationsTableName - 실행될 마이그레이션에 대한 정보를 포함할 데이터베이스의 테이블 이름, 기본적으로 이 테이블명은 '마이그레이션'
+
+// migrationsTransactionMode - migrations의 트랜젝션을 조정 default: all이며, all | none | each 중 선택
+
 // logging - 쿼리나 에러를 로그
 //     - query - logs all queries.
 //     - error - logs all failed queries and errors.
@@ -36,3 +42,140 @@
 // dropSchema - 데이터 소스가 초기화 될 때마다 스키마 삭제 여부
 
 // synchronize - 코드와 데이터베이스의 싱크 여부
+
+// metadataTableName - 데이터베이스에서 테이블 메타데이터를 가지는 테이블명, 기본적으로 이 테이블명은 typeorm_metadata
+
+// cache - 엔티티의 결과를 캐싱할 수 있음, true 여부 or { duration: ****ms }로 설정 가능 
+//     - QueryBuilder : getMany, getOne, getRawMany, getRawOne and getCount.
+//     - Repository and EntityManager : find* and count* methods 
+
+//     캐시할 경우, CLI, migrations, synchronize를 이용해서 데이터 스키마와 싱크를 맞춰야함
+
+//     const users = await dataSource
+//     .createQueryBuilder(User, "user")
+//     .where("user.isAdmin = :isAdmin", { isAdmin: true })
+//     .cache(true)
+//     .getMany()
+
+//     const users = await dataSource.getRepository(User).find({
+//         where: { isAdmin: true },
+//         cache: true,
+//     })
+
+//     default 캐시 시간은 1000ms로 1초임, 캐시가 되는 동안에는 삽입된 정보는 캐시된 정보에 포함되어 있지 않아 리턴되지 않음
+
+//     이럴 때는 cache_Id를 설정해서 조정할 수 있음
+
+//     const users = await dataSource
+//     .createQueryBuilder(User, "user")
+//     .where("user.isAdmin = :isAdmin", { isAdmin: true })
+//     .cache("users_admins", 25000)
+//     .getMany()
+
+//     const users = await dataSource.getRepository(User).find({
+//         where: { isAdmin: true },
+//         cache: {
+//             id: "users_admins",
+//             milliseconds: 25000,
+//         },
+//     })
+
+//     await dataSource.queryResultCache.remove(["users_admins"])
+
+//     이렇게 cache_Id를 관리함으로써 새로운 값이 추가되었을 때는 캐시를 삭제함으로써 관리할 수 있음
+
+//     query-result-cache라는 별도의 테이블을 사용하며 모든 쿼리와 결과를 저장, tableName 속성에 다른 값을 지정하여 테이블명 변경 가능
+
+//     {
+//         type: "mysql",
+//         host: "localhost",
+//         username: "test",
+//         ...
+//         cache: {
+//             type: "database",
+//             tableName: "configurable-table-query-result-cache"
+//         }
+//     }
+
+//     단일 데이터베이스 테이블에 캐시를 저장하는 것이 효과적이지 않은 경우 캐시 유형을 "redis" 또는 "ioredis"로 변경할 수 있으며 TypeORM은 캐시된 모든 레코드를 redis로 저장
+
+//     {
+//         type: "mysql",
+//         host: "localhost",
+//         username: "test",
+//         ...
+//         cache: {
+//             type: "redis",
+//             options: { 상황에 맞는 옵션을 사용 가능
+//                 host: "localhost",
+//                 port: 6379
+//             }
+//         }
+//     }
+
+//     provider factory 함수를 사용해서 캐시 관련 정보를 직접 만들 수 있음
+
+//     class CustomQueryResultCache implements QueryResultCache {
+//         constructor(private dataSource: DataSource) {}
+//         ...
+//     }
+
+
+
+//     {
+//         ...
+//         cache: {
+//             provider(dataSource) {
+//                 return new CustomQueryResultCache(dataSource);
+//             }
+//         }
+//     }
+
+//     에러 캐싱 거부
+
+//     {
+//         type: "mysql",
+//         host: "localhost",
+//         username: "test",
+//         ...
+//         cache: {
+//             type: "redis",
+//             options: {
+//                 host: "localhost",
+//                 port: 6379
+//             },
+//             ignoreErrors: true
+//         }
+//     }
+
+//     typeorm cache:clear 를 통해서 저장된 캐시를 삭제할 수 있음
+
+// cli.entitiesDir - CLI에 의해 생성되는 엔티티가 저장되는 디렉토리
+
+// cli.subscribersDir - CLI에 의해 생성되는 subscribers가 저장되는 디렉토리
+
+
+// mysql data source options
+
+// dateStrings - TIMESTAMP, DATETIME, DATE와 같은 날짜 유형을 자바스크립트 Date 객체가 아닌 문자열로 리턴 여부, true/false 또는 문자열로 변경할 타입을 배열에 담아서 설정 가능
+
+// debug - 프로토콜 세부 정보를 stdout에 출력. true/false 또는 출력 패킷 유형 이름을 배열에 담아서 설정 가능
+//     - 표준 스트림(standard stream)이라고 하며 운영 체제에서 기본적으로 제공하는 추상화된 입출력 장치
+//         - 표준입력(STDIN): 표준 입력 장치의 ID 는 숫자로는 0 이며 일반적으로는 키보드가 됩니다.
+//         - 표준출력(STDOUT):  출력을 위한 스트림으로 표준 출력 장치의 ID 는 1이며 일반적으로는 현재 쉘을 실행한 콘솔(console)이나 터미널(terminal)이 됩니다.
+//         - 표준에러(STDERR):  에러를 위한 스트림으로 표준 에러 장치의 ID 는 2이며 일반적으로는 표준 출력과 동일합니다.
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
