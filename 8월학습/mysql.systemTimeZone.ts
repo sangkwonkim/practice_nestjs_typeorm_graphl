@@ -27,3 +27,6 @@
 // mysql 타임존 변경 후 서버를 실행시킬 때 다음과 같은 에러가 발생했습니다.
 
 // 구글링으로 알아보니 typeorm.cofig에서 타임존을 문자열로 넣을 경우, 인식이 안되서 발생하는 에러로, 이를 시간으로 변경하여 해결할 수 있다는 것을 알게되었습니다.
+
+
+// const allDetail: ISettlementDownloadList = await this.settlementDownloadListService.findOne(findResults[0].settlementDownloadListId);
