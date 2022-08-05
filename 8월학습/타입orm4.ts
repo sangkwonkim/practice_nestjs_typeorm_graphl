@@ -1,3 +1,57 @@
+// 데이터 소스란
+
+// 데이터베이스와의 상호 작용은 데이터 소스를 설정한 후에만 가능 
+// TypeORM의 DataSource는 데이터베이스 연결 설정을 유지하고 사용하는 RDBMS에 따라 초기 데이터베이스 연결 또는 연결 풀을 설정
+
+// 초기 연결/연결 풀을 설정하려면 DataSource 인스턴스의 초기화 메서드 호출
+
+// destroy 메서드가 호출될 때 연결 해제(풀의 모든 연결 해제) 수행
+
+// 일반적으로 애플리케이션 부트스트랩에서 DataSource 인스턴스의 초기화 메서드를 호출하고 데이터베이스 작업을 완료한 후 destory함 
+// 실제로 사이트에 대한 백엔드를 구축하고 백엔드 서버가 항상 실행 중인 경우 데이터 소스를 삭제하지 않음
+
+// Creating a new DataSource
+
+// 새 DataSource 인스턴스를 생성하려면
+// 새 DataSource를 호출하고 응용 프로그램에서 사용할 글로벌 변수에 할당하여 생성자를 초기화
+
+// import { DataSource } from "typeorm"
+
+// const AppDataSource = new DataSource({
+//     type: "mysql",
+//     host: "localhost",
+//     port: 3306,
+//     username: "test",
+//     password: "test",
+//     database: "test",
+// })
+
+// AppDataSource.initialize()
+//     .then(() => {
+//         console.log("Data Source has been initialized!")
+//     })
+//     .catch((err) => {
+//         console.error("Error during Data Source initialization", err)
+//     })
+
+
+// How to use DataSource
+// 데이터 소스를 설정하면 다음과 같이 사용할 수 있음
+    
+// import { AppDataSource } from "./app-data-source"
+// import { User } from "../entity/User"
+
+// export class UserController {
+//     @Get("/users")
+//     getAll() {
+//         return AppDataSource.manager.find(User)
+//     }
+// }
+// DataSource 인스턴스를 사용하면 엔티티의 .manager와 .getRepository() 속성으로
+// 데이터베이스 작업을 실행할 수 있습니다. 특히 .manager 및 .getRepository() 속성을 사용합니다.
+
+
+
 // data source Option
 
 // type - RDBMS 타입, 필수
