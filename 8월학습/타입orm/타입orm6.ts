@@ -266,6 +266,213 @@
 //bigint 타입 주의 사항 => SQL 데이터베이스에서 사용되는 bigint 열 유형은 정규 번호 유형에 맞지 않고 대신 문자열에 속성을 매핑.
 
 //# Column types for mysql / mariadb
-//bit, int, integer, tinyint, smallint, mediumint, bigint, float, double, double precision, dec, decimal, numeric, fixed, bool, boolean, date, datetime, timestamp, time, year, char, nchar, national char, varchar, nvarchar, national varchar, text, tinytext, mediumtext, blob, longtext, tinyblob, mediumblob, longblob, enum, set, json, binary, varbinary, geometry, point, linestring, polygon, multipoint, multilinestring, multipolygon, geometrycollection
+//bit, int, integer, tinyint, smallint, mediumint, bigint, float, double, double precision, dec, decimal, numeric, fixed, bool, boolean, date, datetime, 
+// timestamp, time, year, char, nchar, national char, varchar, nvarchar, national varchar, text, tinytext, mediumtext, blob, longtext, tinyblob, mediumblob, 
+// longblob, enum, set, json, binary, varbinary, geometry, point, linestring, polygon, multipoint, multilinestring, multipolygon, geometrycollection
 
-//enum column type부터 하기
+
+
+// enum column type
+// 타입스크립트 이넘을 사용할 경우;
+
+// export enum UserRole {
+//     ADMIN = "admin",
+//     EDITOR = "editor",
+//     GHOST = "ghost",
+// }
+
+// @Entity()
+// export class User {
+//     @PrimaryGeneratedColumn()
+//     id: number
+
+//     @Column({
+//         type: "enum",
+//         enum: UserRole,
+//         default: UserRole.GHOST,
+//     })
+//     role: UserRole
+// }
+// 문자열, 숫자 및 여러 종류로 이뤄진 이넘이 지원됨
+
+// 이넘 값을 배열로 사용할 경우;
+// export type UserRoleType = "admin" | "editor" | "ghost",
+
+// @Entity()
+// export class User {
+
+//     @PrimaryGeneratedColumn()
+//     id: number;
+
+//     @Column({
+//         type: "enum",
+//         enum: ["admin", "editor", "ghost"],
+//         default: "ghost"
+//     })
+//     role: UserRoleType
+// }
+
+
+
+// 컬럼 타입 set
+// 타입스크립트 이넘을 사용할 경우;
+// export enum UserRole {
+//     ADMIN = "admin",
+//     EDITOR = "editor",
+//     GHOST = "ghost",
+// }
+
+// @Entity()
+// export class User {
+//     @PrimaryGeneratedColumn()
+//     id: number
+
+//     @Column({
+//         type: "set",
+//         enum: UserRole,
+//         default: [UserRole.GHOST, UserRole.EDITOR],
+//     })
+//     roles: UserRole[]
+// }
+
+// set 값으로 배열을 사용할 경우;
+// export type UserRoleType = "admin" | "editor" | "ghost",
+
+// @Entity()
+// export class User {
+
+//     @PrimaryGeneratedColumn()
+//     id: number;
+
+//     @Column({
+//         type: "set",
+//         enum: ["admin", "editor", "ghost"],
+//         default: ["ghost", "editor"]
+//     })
+//     roles: UserRoleType[]
+// }
+
+
+
+// simple-array column type
+// 단일 문자열 컬럼에 원시 배열의 값을 저장할 수 있는 simple-array라는 특수 컬럼
+// 모든 값은 콤마로 나눠짐
+
+// @Entity()
+// export class User {
+//     @PrimaryGeneratedColumn()
+//     id: number
+
+//     @Column("simple-array")
+//     names: string[]
+// }
+// const user = new User()
+// user.names = ["Alexander", "Alex", "Sasha", "Shurik"]
+
+// Alexander, Alex, Sasha, Schurik 값으로 단일 데이터베이스 컬럼에 저장됨.
+// 데이터베이스에서 데이터를 로드할 때, 이름은 저장한 것처럼 이름 배열로 반환되며, 단 입력하는 값에는 쉼표가 없어야 함.
+
+
+
+// simple-json column type
+// simple-json은 어떤 값이든 데이터베이스에 JSON.stringify를 통해서 저장할 수 있는 특수 컬럼임
+// 데이터베이스에 json 유형이 없고 번거로움 없이 객체를 저장하고 로드하길 원할 때 매우 유용함
+
+// @Entity()
+// export class User {
+//     @PrimaryGeneratedColumn()
+//     id: number
+
+//     @Column("simple-json")
+//     profile: { name: string; nickname: string }
+// }
+// const user = new User()
+// user.profile = { name: "John", nickname: "Malkovich" }
+
+// 단일 데이터베이스에 {"name":"John","nickname":"Malkovich"}로 저장됨.
+// 데이터베이스에서 데이터를 로드할 때, 객체, 배열, 원시값이 JSON.parse 되어 반환됨
+
+
+
+// Columns with generated values
+// @Generated decorator를 사용해서 값을 생성하는 컬럼을 만들 수 있음
+
+// @Entity()
+// export class User {
+//     @PrimaryColumn()
+//     id: number
+
+//     @Column()
+//     @Generated("uuid")
+//     uuid: string
+// }
+
+
+// uuid value는 자동적으로 만들어지며 데이터베이스에 저장됨
+// uuid 외에도 increment, identity, rowid 생성 유형이 있지만 일부 데이터베이스에서 제한될 수 있음(어떤 데이터베이스는 하나의 증가 컬럼을 가질 수 있으며, 일부는 기본키로 사용되어야 할 수 있음)
+
+
+
+// Column options
+// 엔티티의 컬럼에 추가적인 옵션을 정의할 수 있음
+
+// @Column({
+//     type: "varchar",
+//     length: 150,
+//     unique: true,
+//     // ...
+// })
+// name: string;
+
+
+// ColumnOptions:컬럼 타입, 위에서 알아본 컬럼 타입 중 하나가 들어감
+
+// name: string - 데이터 베이스의 컬럼 이름. 기본값으로 컬럼 이름은 프로퍼티의 이름에서 생성되며, 따로 지정할 수 있음
+
+// length: number - 컬럼 타입의 길이. 
+
+// width: number - 컬럼 타입의 표시 너비. mysql integer에서만 사용
+
+// onUpdate: string - ON UPDATE의 trigger. mysql에서만 사용
+
+// nullable: boolean - 컬럼을 NULL or NOT NULL로 할 수 있음. 기본값은 nullable: false
+
+// update: boolean - 컬럼의 값이 save에 의해 업데이트되는 지 여부를 나타냄. false일 경우, 해당 값은 객체를 처음 삽일할 때만 입력할 수 있으며 기본값은 true
+
+// insert: boolean - 컬럼의 값이 객체를 처음 삽입할 때 설정되었는 지 여부를 나타냄. 기본값은 true
+
+// select: boolean - 쿼리를 만들 때 기본 값으로 해당 컬럼을 숨길 지 여부를 나타냄. false일 경우, 이 컬럼의 정보는 기본적인 쿼리에서는 나타나지 않음. 기본값으로 컬럼 select는 true임.
+
+// default: string - 기본 값 설정
+
+// primary: boolean - 값이 primary인지 여부를 나타냄. @PrimaryColumn를 사용할 때와 동일
+
+// unique: boolean - 컬럼이 고유 값인지 표시하며 고유 제약을 걺
+
+// comment: string - 데이터베이스 컬럼의 코멘트. 모든 데이터베이스가 지원되진 않음
+
+// precision: number - 십진수 컬럼에 대한 정밀도로, 값으로 저장된 숫자의 최대값임. 일부 컬럼 유형에서 사용됨
+
+// scale: number - 소수점 컬럼에 대한 크기로, 소수점 이하 숫자의 갯수를 나타내며, 해당 숫자보다 클 순 없음. 일부 컬럼 유형에서 사용됨
+
+// zerofill: boolean - 숫자 열에 ZEROFILL 속성을 표시. MySQL에서만 사용되며 true일 경우 MySQL은 자동으로 이 열에 UNSIGNED 속성을 추가함.
+
+// unsigned: boolean - 숫자 컬럼에 UNSIGNED 속성을 표시. MySQL에서만 사용됨
+
+// charset: string - 컬럼의 특징을 정의함.
+
+// collation: string - 컬럼의 collation을 정의함
+
+// enum: string[]|AnyEnum - 이넘 컬럼 타입으로, 이넘의 값으로 사용할 수 있는 리스트. 값의 배열이나 이넘 클래스를 사용해 특정할 수 있음.
+
+// enumName: string - 사용되는 이넘의 이름을 정할 수 있음
+
+// asExpression: string - 컬럼의 표시를 정할 수 있으며 mysql에서만 사용됨.
+
+// generatedType: "VIRTUAL"|"STORED" - 생성된 컬럼 타입으로, mysql에서만 사용됨.
+
+// hstoreType: "object"|"string" - HSTORE 컬럼의 리턴 타입. 값을 문자열이나 객체로 리턴함. Postgres에서만 사용됨.
+
+// array: boolean - postgres와 cockroachdb의 컬럼으로 사용되며, 배열이 될 수 있는 컬럼 타입임
+
+// Entity inheritance 부터 하기
