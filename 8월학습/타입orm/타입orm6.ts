@@ -475,4 +475,111 @@
 
 // array: boolean - postgres와 cockroachdb의 컬럼으로 사용되며, 배열이 될 수 있는 컬럼 타입임
 
-// Entity inheritance 부터 하기
+// Entity inheritance
+
+// 엔티티 상속을 사용해서 코드의 중복을 줄일 수 있음
+
+// 중복을 줄이고 더 나은 추상화를 만들기 위해 기본 클래스를 만들 수 있음
+
+// export abstract class Content {
+//  @PrimaryGeneratedColumn()
+//  id: number
+
+//  @Column()
+//  title: string
+
+//  @Column()
+//  description: string
+//}
+//@Entity()
+//export class Photo extends Content {
+//  @Column()
+//  size: string
+//}
+
+//@Entity()
+//export class Question extends Content {
+//  @Column()
+//  answersCount: number
+//}
+
+//@Entity()
+//export class Post extends Content {
+//  @Column()
+//  viewCount: number
+//}
+
+//상위 엔터티(상위 엔터티도 다른 엔터티를 확장할 수 있음)의 모든 컬럼(관계, 포함 등)이 상속되어 최종 엔터티가 생성됨.
+
+
+
+//Tree entities
+
+//TypeORM은 인접 리스트와 tree 구조 저장의 Closure table patterns을 지원함
+
+//Adjacency list
+//Adjacency list은 자체 참조가 있는 간단한 모델임 
+//이러한 접근 방식의 장점은 간단하지만 join의 제한으로 인해 한 번에 big tree를 로드할 수 없다는 단점이 있음
+
+//import {
+//  Entity,
+//  Column,
+//  PrimaryGeneratedColumn,
+//  ManyToOne,
+//  OneToMany,
+//} from "typeorm"
+
+//@Entity()
+//export class Category {
+//  @PrimaryGeneratedColumn()
+//  id: number
+
+//  @Column()
+//  name: string
+
+//  @Column()
+//  description: string
+
+//  @ManyToOne((type) => Category, (category) => category.children)
+//  parent: Category
+
+//  @OneToMany((type) => Category, (category) => category.parent)
+//  children: Category[]
+//}
+
+
+
+//Closure table
+//Closure table은 부모와 자식 간의 관계를 특별한 방식으로 별도의 테이블에 저장하며 읽기 및 쓰기 모두 효율적임
+//다음에 공부해보기: https://www.slideshare.net/billkarwin/models-for-hierarchical-data
+//import {
+//  Entity,
+//  Tree,
+//  Column,
+//  PrimaryGeneratedColumn,
+//  TreeChildren,
+//  TreeParent,
+//  TreeLevelColumn,
+//} from "typeorm"
+
+//@Entity()
+//@Tree("closure-table")
+//export class Category {
+//  @PrimaryGeneratedColumn()
+//  id: number
+
+//  @Column()
+//  name: string
+
+//  @Column()
+//  description: string
+
+//  @TreeChildren()
+//  children: Category[]
+
+//  @TreeParent()
+//  parent: Category
+
+//  @TreeLevelColumn()
+//  level: number
+//}
