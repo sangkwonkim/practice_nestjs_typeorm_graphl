@@ -28,15 +28,18 @@
 //      일   월   화   수   목   금   토
 //1주       |----- 타입 ORM -----|  VSCode
 //2주       |----- 타입 ORM -----|  깃
-//3주       |-----  nest.js -----|  깃
+//3주       |----- 타입 ORM -----|  깃
 //4주       |-----  nest.js -----|  깃
-//5주       |-----  graphql -----|  깃
+//5주       |-----  nest.js -----|  깃
 
 //아직은 주력인 부분을 자신있게 잘 다룬다고 확신할 수 있는 실력이 아니기 때문에 주력을 우선적으로 학습하고
 //typeORM, nestjs, graphql이 끝나면 4주차에는 알고리즘이나 자료구조 등 깊이부분을 학습해보도록 하겠습니다.
 
 //지금까지 학습했던 것은 한 폴더에 다 넣고, 주차별, 월별 폴더, 에러 헨들링 폴더를 만들어서 관리해보겠습니다.
 
+// 08.11 추가 출근 전 한시간, 출근 후 한시간 학습을 진행하는 데 타입orm 양이 생각보다 많이서 3주까지 타입orm을 계획하고
+// 끝나는 대로 nest.js에 돌입하도록 하겠습니다.
 
 // 공부해보기
 // https://en.wikipedia.org/wiki/Performance_tuning
+// https://stackoverflow.com/questions/67554794/queryrunneralreadyreleasederror-when-executing-a-series-of-queries-in-a-single-t
