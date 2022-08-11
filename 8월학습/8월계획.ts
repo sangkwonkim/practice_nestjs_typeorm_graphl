@@ -36,3 +36,7 @@
 //typeORM, nestjs, graphql이 끝나면 4주차에는 알고리즘이나 자료구조 등 깊이부분을 학습해보도록 하겠습니다.
 
 //지금까지 학습했던 것은 한 폴더에 다 넣고, 주차별, 월별 폴더, 에러 헨들링 폴더를 만들어서 관리해보겠습니다.
+
+
+// 공부해보기
+// https://en.wikipedia.org/wiki/Performance_tuning
