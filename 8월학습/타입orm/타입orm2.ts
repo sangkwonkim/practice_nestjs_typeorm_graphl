@@ -355,3 +355,13 @@
 // })
 // studentCarts: StudentCart[];
 
+// ManyToMany에서는 @JoinTable()가지는 테이블이 맵핑 테이블을 생성할 때 이름이 우선한다(맵핑 테이블 자동 생성일 경우)
+// ManyToMany 관계 하에서 한 테이블의 데이터가 삭제될 경우, 맵핑 테이블도 삭제 시키기 위해서는
+// @JoinTable()을 가지는 엔티티에 위의 코드와 같이 casacade와 onDelete를 선언해주면 된다.
+
+// ManyToMany 관계의 두 테이블 모두에서 맵핑 테이블 cascade가 되지 않을까 해서
+// 둘 다 cascade, onDelete 를 넣으니 한 쪽에만 넣어야 한다는 에러가 떴고
+// JoinTable이 없는 테이블에서 cascade: true 넣었더니 동일한 에러가 발생했다
+
+// JoinTable이 없는 테이블에 onDelete: 'CASCADE' 했을 때 해당 테이블에 데이터가 삭제되면 맵핑 테이블에서 해당 데이터가 포함되어있는 행이 삭제되는 것을 확인함
+// onDelete: 'CASCADE'이 없다면 외래키 제약 조건으로 삭제가 안되는 것을 확인함.
