@@ -341,14 +341,6 @@
 // 데이터 베이스에 해당 엔티티가 존재하는 지 여부를 확인하지 않으며, 조건이 공란으로 올 수 없다.
 
 
-
-
-
-// 진행 중인 프로젝트에서 구현한 entity의 일부입니다. ManyToMany 관계에서 onDelete: 'CASCADE'가 정상적으로 동작하지 않아
-// 구글링을 하다 다음과 같은 코드를 적용했을 때 동작한 것을 경험했습니다.
-
-// 더 학습해보고 해당 코드에 대해 알아보는 기회를 가져보겠습니다.
- 
 // @ManyToMany(() => StudentCart, (cart) => cart.artClasses, {
 //   cascade: true,
 //   onDelete: 'CASCADE',
