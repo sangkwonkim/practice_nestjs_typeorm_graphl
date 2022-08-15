@@ -183,3 +183,147 @@
 //  *      (externalId = cba321, firstName = Karzzir),
 //  *  ON CONFLICT (externalId) DO UPDATE firstName = EXCLUDED.firstName
 //  **/
+
+
+delete - 엔티티 id나 id배열, 주어신 조건으로 엔티티를 삭제함
+await repository.delete(1)
+await repository.delete([1, 2, 3])
+await repository.delete({ firstName: "Timber" })
+
+softDelete and restore - id를 사용해서 soft delete하고 복원함 
+Soft deleting and restoring a row by id
+const repository = dataSource.getRepository(Entity)
+// Delete a entity
+await repository.softDelete(1)
+// And You can restore it using restore;
+await repository.restore(1)
+
+
+softRemove and recover - softDelete와 restore의 대안임
+// You can soft-delete them using softRemove
+const entities = await repository.find()
+const entitiesAfterSoftRemove = await repository.softRemove(entities)
+
+// And You can recover them using recover;
+await repository.recover(entitiesAfterSoftRemove)
+
+
+increment - 주어진 옵션과 일치하는 엔티티의 주어진 값을 기준으로 일부 컬럼을 증가시킴
+await repository.increment({ firstName: "Timber" }, "age", 3)
+
+
+decrement - 주어진 옵션과 일치하는 주어진 값의 일부 컬럼을 감소시킴
+await repository.decrement({ firstName: "Timber" }, "age", 3)
+
+
+count - 주어진 옵션과 일치하는 엔티티의 갯수를 셈. 페이지네이션에 유용함
+const count = await repository.count({
+    where: {
+        firstName: "Timber",
+    },
+})
+
+
+countBy - 주어진 옵션과 일치하는 엔티티의 갯수를 셈. 페이지네이션에 유용함
+const count = await repository.countBy({ firstName: "Timber" })
+
+
+find - 주어진 옵션과 일치하는 엔티티를  찾음
+const timbers = await repository.find({
+    where: {
+        firstName: "Timber",
+    },
+})
+findBy - 주어진 옵션과 일치하는 엔티티를 찾음
+const timbers = await repository.findBy({
+    firstName: "Timber",
+})
+
+=> by가 들어가면 where 조건을 따로 지정하지 않고 객체로 count하거나 find할 수 있음
+
+
+findAndCount - 주어진 옵션과 일치한 엔티티를 찾고 주어진 조건과 일치하는 모든 엔티티의 갯수를 셈.
+페이지네이션 세팅은 무시함
+const [timbers, timbersCount] = await repository.findAndCount({
+    where: {
+        firstName: "Timber",
+    },
+})
+
+
+findAndCountBy - 주어진 옵션과 일치한 엔티티를 찾고 주어진 조건과 일치하는 모든 엔티티의 갯수를 셈.
+페이지네이션 세팅은 무시함
+const [timbers, timbersCount] = await repository.findAndCountBy({
+    firstName: "Timber",
+})
+
+
+findOne - 주어진 조건과 일치하는 첫번째 엔티티를 찾음
+const timber = await repository.findOne({
+    where: {
+        firstName: "Timber",
+    },
+})
+
+
+findOneBy - 주어진 조건과 일치하는 첫번째 엔티티를 찾음
+const timber = await repository.findOneBy({ firstName: "Timber" })
+
+
+findOneOrFail - 일부 id 또는 옵션과 일치하는 첫번째 엔티티를 찾음. 아무거도 일치하지 않다면 promise reject로 리턴함
+const timber = await repository.findOneOrFail({
+    where: {
+        firstName: "Timber",
+    },
+})
+
+
+findOneByOrFail - 주어진 조건과 일치하는 첫번째 엔티티를 찾음. 아무거도 일치하지 않다면 promise reject로 리턴함
+const timber = await repository.findOneByOrFail({ firstName: "Timber" })
+
+
+query - raw SQl 쿼리를 실행함
+const rawData = await repository.query(`SELECT * FROM USERS`)
+
+
+clear - 주어진 테이블의 모든 데이터를 clear함
+await repository.clear()
+
+
+Additional Options
+save의 파라미터로 SaveOptions를 입력할 수 있음
+
+data - persist method로 넣을 수 있는 추가적인 데이터. 그러면 subscribers로 이 데이터를 사용할 수 있음
+listeners: boolean - 이 작업으로 listeners나 subscribers를 호출할지 여부를 나타냄
+기본값으로 둘 다 이용 가능함. save나 remove의 옵션으로 { listeners: false } 넣음으로써 사용하지 않을 수 있음
+transaction: boolean - 기본값으로 transactions 사용할 수 있고 지속성 작업의 모든 쿼리는 트랜젝션으로 래핑됨
+persistence options으로 { transaction: false } 함으로써 사용하지 않을 수 있음
+chunk: number - save 실행을 여러 청크 그룹으로 나눔
+예를 들어 100.000개의 개체를 저장하려고 하는데 저장하는 데에 문제가 있는 경우 
+해당 개체를 10개의 10.000개 개체 그룹으로 나누고({chunk:10000} 설정) 각 그룹을 별도로 저장할 수 있음 
+이 옵션은 기본 드라이버 매개 변수 번호 제한에 문제가 있을 때 매우 큰 삽입을 수행하는 데 필요함.
+reload: boolean - persistence operation 중에 유지 중인 엔티티를 다시 로드해야 하는지 여부를 결정하는 표시임
+RETURNING/OUTPUT 문을 지원하지 않는 데이터베이스에서만 작동하며 기본적으로 사용 가능함
+
+
+Example:
+// users contains array of User Entities
+userRepository.save(users, { chunk: users.length / 1000 })
+
+
+Optional RemoveOptions를 remove나 delete 파라미터로 넣을 수 있음
+data - remove method로 넣을 수 있는 추가적인 데이터. 그러면 subscribers로 이 데이터를 사용할 수 있음
+listeners: boolean - 이 작업으로 listeners나 subscribers를 호출할지 여부를 나타냄
+기본값으로 둘 다 이용 가능함. save나 remove의 옵션으로 { listeners: false } 넣음으로써 사용하지 않을 수 있음
+transaction: boolean - 기본값으로 transactions 사용할 수 있고 지속성 작업의 모든 쿼리는 트랜젝션으로 래핑됨
+persistence options으로 { transaction: false } 함으로써 사용하지 않을 수 있음
+
+chunk: number - remove 실행을 여러 청크 그룹으로 나눔
+예를 들어 100.000개의 개체를 삭제하려고 하는데 문제가 있는 경우 
+해당 개체를 10개의 10.000개 개체 그룹으로 나누고({chunk:10000} 설정) 각 그룹을 별도로 삭제할 수 있음 
+이 옵션은 기본 드라이버 매개 변수 번호 제한에 문제가 있을 때 매우 큰 삭제를 수행하는 데 필요함.
+
+Example:
+
+// users contains array of User Entities
+userRepository.remove(users, { chunk: entities.length / 1000 })
