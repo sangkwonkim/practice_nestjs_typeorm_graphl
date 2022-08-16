@@ -1,0 +1,1 @@
+쿼리 빌더는 제외하고 active recoder, logging까지 하고 typeorm끝내고 nest 들어가기
