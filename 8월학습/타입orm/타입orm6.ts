@@ -270,7 +270,7 @@
 // timestamp, time, year, char, nchar, national char, varchar, nvarchar, national varchar, text, tinytext, mediumtext, blob, longtext, tinyblob, mediumblob, 
 // longblob, enum, set, json, binary, varbinary, geometry, point, linestring, polygon, multipoint, multilinestring, multipolygon, geometrycollection
 
-
+// char field is a fixed length, and varchar is a variable length field.
 
 // enum column type
 // 타입스크립트 이넘을 사용할 경우;
