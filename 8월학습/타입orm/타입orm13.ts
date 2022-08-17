@@ -890,3 +890,201 @@
 //     .addCommonTableExpression(insertQueryBuilder, 'insert_results')
 //     .where(`user.id IN (SELECT "id" FROM 'insert_results')`)
 //     .getMany();
+
+
+
+// Insert using Query Builder
+// QueryBuilder를 사용해서 insert 쿼리를 만들 수 있음
+
+// await dataSource
+//     .createQueryBuilder()
+//     .insert()
+//     .into(User)
+//     .values([
+//         { firstName: "Timber", lastName: "Saw" },
+//         { firstName: "Phantom", lastName: "Lancer" },
+//     ])
+//     .execute()
+
+// 이것이 데이터베이스에 행을 삽입하는 가장 효율적인 방법임. 이러한 방식으로 대량 삽입을 수행할 수도 있음
+
+
+// Raw SQL support
+// 함수 형태의 값을 넣기 원할 때도 sql 쿼리를 실행해서 할 수 있음
+
+// await dataSource
+//     .createQueryBuilder()
+//     .insert()
+//     .into(User)
+//     .values({
+//         firstName: "Timber",
+//         lastName: () => "CONCAT('S', 'A', 'W')",
+//     })
+//     .execute()
+
+// 이 syntax는 값들을 탈출할 수 없으며, 자체적으로 탈출을 다뤄야함
+
+
+
+
+// Update using Query Builder
+// QueryBuilder를 사용해서 update 쿼리를 만들 수 있음
+
+// await dataSource
+//     .createQueryBuilder()
+//     .update(User)
+//     .set({ firstName: "Timber", lastName: "Saw" })
+//     .where("id = :id", { id: 1 })
+//     .execute()
+
+// 이것이 데이터베이스에서 엔티티를 update하는 가장 효율적인 방법임
+
+
+// Raw SQL support
+// 함수 형태의 값을 사용하기 원할 때도 sql 쿼리를 실행해서 할 수 있음
+
+// await dataSource
+//     .createQueryBuilder()
+//     .update(User)
+//     .set({
+//         firstName: "Timber",
+//         lastName: "Saw",
+//         age: () => "age + 1",
+//     })
+//     .where("id = :id", { id: 1 })
+//     .execute()
+
+// 이 syntax는 값들을 탈출할 수 없으며, 자체적으로 탈출을 다뤄야함
+
+
+
+// Delete
+// QueryBuilder를 사용해서 delete 쿼리를 만들 수 있음
+
+// await myDataSource
+//     .createQueryBuilder()
+//     .delete()
+//     .from(User)
+//     .where("id = :id", { id: 1 })
+//     .execute()
+
+// 데이터베이스에서 엔티티를 삭제하는 가장 효율적인 방법임
+
+// Soft-Delete
+// QueryBuilder로 Soft Delete도 지원함
+
+// await dataSource.getRepository(Entity).createQueryBuilder().softDelete()
+
+
+
+// Restore-Soft-Delete
+
+// 또는 restore() 방법을 사용하여 삭제된 임시 행을 복구할 수 있음
+
+// await dataSource.getRepository(Entity).createQueryBuilder().restore()
+
+
+
+// Working with Relations
+// RelationQueryBuilder는 relation과 함께 동작할 수 있는 QueryBuilder의 특별한 타입임
+// 이 기능을 사용하면 엔티티를 로드할 필요 없이 데이터베이스에서 엔티티를 서로 바인딩하거나 관련 엔티티를 쉽게 로드할 수 있음
+
+
+// Post 엔티티가 Category와 many-to-many relation되어 있음(categories)
+
+// 이 many-to-many relation에 새로운 카테고리를 추가해보기
+
+// await dataSource
+//     .createQueryBuilder()
+//     .relation(Post, "categories")
+//     .of(post)
+//     .add(category)
+
+// 이 코드는 다음과 같이 동작함
+
+// const postRepository = dataSource.manager.getRepository(Post)
+// const post = await postRepository.findOne({
+//     where: {
+//         id: 1,
+//     },
+//     relations: {
+//         categories: true,
+//     },
+// })
+// post.categories.push(category)
+// await postRepository.save(post)
+
+
+// 그러나 대용량 저장 메서드 호출과 달리 최소한의 작업만 수행하고 데이터베이스의 엔티티를 바인딩하므로 더욱 효율적임
+
+// 또한 이러한 접근 방식의 또 다른 이점은 모든 관련 엔티티를 로드하지 않아도 된다는 것임 
+// 예를 들어, 하나의 게시물 안에 10,000개의 카테고리가 있는 경우,
+// 이 목록에 새로운 게시물을 추가하는 것은 문제가 될 수 있음 
+// 왜냐하면 표준적인 방법은 게시물을 10,000개의 모든 카테고리로 로드하고, 새로운 카테고리를 푸시하고, 저장하기 때문
+
+// 이로 인해 매우 높은 성능 비용이 발생하며 기본적으로 생산 결과에 적용할 수 없음 하지만 relationQueryBuilder로 해결할 수 있음
+// 또한 엔티티 ID를 대신 사용할 수 있으므로 "바인딩"할 때 엔티티를 사용할 필요가 없음 
+
+
+// 예를 들어, id가 3인 category를 id가 1인 post에 추가해 보기
+
+// await dataSource.createQueryBuilder().relation(Post, "categories").of(1).add(3)
+
+// 만약 복합적인 primary keys를 사용할 경우, id map으로 그들을 입력해주면 됨
+// If you are using composite primary keys, you have to pass them as an id map, for example:
+
+// await dataSource
+//     .createQueryBuilder()
+//     .relation(Post, "categories")
+//     .of({ firstPostId: 1, secondPostId: 3 })
+//     .add({ firstCategoryId: 2, secondCategoryId: 4 })
+
+
+// 추가했던 거처럼 엔티티를 삭제할 수 있음
+
+// // this code removes a category from a given post
+// await dataSource
+//     .createQueryBuilder()
+//     .relation(Post, "categories")
+//     .of(post) // you can use just post id as well
+//     .remove(category) // you can use just category id as well
+
+// 관련된 엔티티에서 추가하고 삭제하는 작업은 many-to-many와 one-to-many relations에서 가능함
+
+// one-to-one과 many-to-one 관계에서는 set을 사용함
+
+// // this code sets category of a given post
+// await dataSource
+//     .createQueryBuilder()
+//     .relation(Post, "categories")
+//     .of(post) // you can use just post id as well
+//     .set(category) // you can use just category id as well
+
+// relation을 unset하기 원할 경우(null로 set) set 메소드에 null 넣으면 됨
+
+// // this code unsets category of a given post
+// await dataSource
+//     .createQueryBuilder()
+//     .relation(Post, "categories")
+//     .of(post) // you can use just post id as well
+//     .set(null)
+
+// relation을 update하는 것뿐만 아니라, relational query builder는 relational entities를 로드하는 것도 해줌
+// post 엔티티 내부에서 many-to-many categories relation, many-to-one user relation이 있을 경우,
+// 다음 코드를 사용할 수 있는 관계를 로드할 수 있음
+
+// const post = await dataSource.manager.findOneBy(Post, {
+//     id: 1,
+// })
+
+// post.categories = await dataSource
+//     .createQueryBuilder()
+//     .relation(Post, "categories")
+//     .of(post) // you can use just post id as well
+//     .loadMany()
+
+// post.author = await dataSource
+//     .createQueryBuilder()
+//     .relation(Post, "user")
+//     .of(post) // you can use just post id as well
+//     .loadOne()
