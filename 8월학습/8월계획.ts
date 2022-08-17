@@ -40,6 +40,13 @@
 // 08.11 추가 출근 전 한시간, 출근 후 한시간 학습을 진행하는 데 타입orm 양이 생각보다 많이서 3주까지 타입orm을 계획하고
 // 끝나는 대로 nest.js에 돌입하도록 하겠습니다.
 
+// 8월 17일까지 타입orm을 학습했습니다.
+// 지금까지 공부한 양이 적지 않기 때문에 이번 주에는 타입orm를 복습하고, 
+// 다음 주부터 nestJs 학습에 들어가도록 하겠습니다.
+
+// 이번에 정의를 다시 학습하면서 기존에 구현했던 코드에서 개선점이 보이고 수정할 수 있게 되어 큰 도움이 되었습니다.
+// 이후에 학습할 nest와 graphql도 열심히 학습해보도록 하겠습니다.
+
 // 공부해보기
 // https://en.wikipedia.org/wiki/Performance_tuning
 // https://stackoverflow.com/questions/67554794/queryrunneralreadyreleasederror-when-executing-a-series-of-queries-in-a-single-t
