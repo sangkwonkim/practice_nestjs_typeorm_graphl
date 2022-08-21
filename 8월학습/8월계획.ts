@@ -47,6 +47,12 @@
 // 이번에 정의를 다시 학습하면서 기존에 구현했던 코드에서 개선점이 보이고 수정할 수 있게 되어 큰 도움이 되었습니다.
 // 이후에 학습할 nest와 graphql도 열심히 학습해보도록 하겠습니다.
 
+
+// 08/21 추가
+// 지난 주 08.18부터 코로나에 걸려서 타입orm 복습과 이번 주차 git 학습을 못했습니다
+// 그래서 4째주에 못했던 타입orm 복습과 git 학습을 진행하려고 합니다.
+
+
 // 공부해보기
 // https://en.wikipedia.org/wiki/Performance_tuning
 // https://stackoverflow.com/questions/67554794/queryrunneralreadyreleasederror-when-executing-a-series-of-queries-in-a-single-t
