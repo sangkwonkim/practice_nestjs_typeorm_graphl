@@ -79,6 +79,8 @@
 //     @Column()
 //     name: string
 // }
+
+
 // import {
 //     Entity,
 //     PrimaryGeneratedColumn,
@@ -327,7 +329,7 @@
 
 
 
-// delete와 softRemove 차이점
+// delete와 softDelete 차이점
 // delete<Entity>(targetOrEntity: EntityTarget<Entity>, criteria: string | string[] | number | number[] | Date | Date[] | ObjectID | ObjectID[] | any): Promise<DeleteResult>;
 
 // 주어진 조건에 맞는 엔티티를 삭제한다.
